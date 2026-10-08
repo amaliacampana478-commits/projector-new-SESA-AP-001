@@ -1637,5 +1637,28 @@ h2.tituloPagina{ line-height:1.2!important; color:var(--aocp-ink)!important; fon
 #btn-confirmar{ border-radius:12px!important; padding:13px 28px!important; font-weight:800!important;
   box-shadow:0 8px 18px rgba(54,169,128,.32)!important; transition:transform .15s ease, box-shadow .2s ease!important; }
 #btn-confirmar:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(54,169,128,.40)!important; }
+/* ---- match lower card width to top edital card ---- */
+#pgInformacoes{ padding-left:0!important; padding-right:0!important; }
+.blocoPadrao, .blocoPadrao > .dados, #TopoInformacoes, #TopoInformacoes > .dados, .dados{
+  width:100%!important; max-width:100%!important;
+  padding-left:0!important; padding-right:0!important;
+  margin-left:0!important; margin-right:0!important;
+  overflow:visible!important; background:transparent!important; border:0!important; box-shadow:none!important;
+}
+.conf-list{ margin-left:0!important; margin-right:0!important; }
+/* ---- flags block as its own card, NÃO/SIM not clipped ---- */
+#TopoInformacoes .conf-flags, .conf-flags{
+  overflow:visible!important; background:#fff!important; border:1px solid var(--aocp-border)!important;
+  border-radius:18px!important; box-shadow:0 6px 22px rgba(23,52,92,.06)!important;
+  padding:6px 22px!important; margin-top:18px!important;
+}
+#TopoInformacoes .conf-flags p, .conf-flags p{
+  padding:15px 2px!important; border-bottom:1px solid #eef1f4!important; gap:24px!important;
+  align-items:center!important;
+}
+#TopoInformacoes .conf-flags p:last-child, .conf-flags p:last-child{ border-bottom:0!important; }
+#TopoInformacoes .conf-flags p span, .conf-flags p span{
+  float:none!important; white-space:nowrap!important; font-weight:800!important; flex:0 0 auto!important;
+}
 </style>
 </body></html>
