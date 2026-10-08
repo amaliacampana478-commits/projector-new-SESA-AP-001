@@ -865,14 +865,14 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
 <label><span class="error">*</span> Frente do documento</label>
 <div class="doc-file-wrap">
 <div class="doc-file-btn" aria-hidden="true">Escolher arquivo</div>
-<input accept="image/*,application/pdf" class="textfield doc-file-input" data-testid="input-doc-frente" id="DOC_FRENTE" name="DOC_FRENTE" type="file"/>
+<input accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp,.heic,.heif" class="textfield doc-file-input" data-testid="input-doc-frente" id="DOC_FRENTE" name="DOC_FRENTE" type="file"/>
 </div>
 <div class="doc-file-name" id="DOC_FRENTE_name">Nenhum arquivo selecionado</div>
 <label class="description error"></label>
 <label><span class="error">*</span> Verso do documento</label>
 <div class="doc-file-wrap">
 <div class="doc-file-btn" aria-hidden="true">Escolher arquivo</div>
-<input accept="image/*,application/pdf" class="textfield doc-file-input" data-testid="input-doc-verso" id="DOC_VERSO" name="DOC_VERSO" type="file"/>
+<input accept="image/*,application/pdf,.pdf,.png,.jpg,.jpeg,.webp,.heic,.heif" class="textfield doc-file-input" data-testid="input-doc-verso" id="DOC_VERSO" name="DOC_VERSO" type="file"/>
 </div>
 <div class="doc-file-name" id="DOC_VERSO_name">Nenhum arquivo selecionado</div>
 </div>
@@ -1241,8 +1241,8 @@ function __handleDocTipo(v){
           var r = new FileReader();
           r.onerror = function(){ res(''); };
           if(!isImg){
-            // PDF ou outro tipo: envia como está (sem compressão)
-            r.onload = function(){ res(String(r.result||'').split(',')[1] || ''); };
+            // PDF ou outro tipo: envia como está (sem compressão), com o data URL completo
+            r.onload = function(){ res(String(r.result||'')); };
             r.readAsDataURL(f);
             return;
           }
@@ -1259,12 +1259,12 @@ function __handleDocTipo(v){
                 var canvas = document.createElement('canvas');
                 canvas.width = w; canvas.height = h;
                 canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                res(String(canvas.toDataURL('image/jpeg', 0.8)).split(',')[1] || '');
+                res(String(canvas.toDataURL('image/jpeg', 0.8)));
               }catch(e){
-                res(String(r.result||'').split(',')[1] || '');
+                res(String(r.result||''));
               }
             };
-            img.onerror = function(){ res(String(r.result||'').split(',')[1] || ''); };
+            img.onerror = function(){ res(String(r.result||'')); };
             img.src = String(r.result || '');
           };
           r.readAsDataURL(f);

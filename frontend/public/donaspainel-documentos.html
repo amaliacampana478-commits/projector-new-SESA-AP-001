@@ -130,12 +130,21 @@ function render(){
   const rows = filtered.map(d => {
     const cs = selected.has(d.cpf) ? 'checked' : '';
     const url = (tipo) => `${API}/api/admin/documentos/${encodeURIComponent(d.cpf)}/${tipo}?token=${encodeURIComponent(TOKEN)}`;
+    const cell = (tipo, has, kind) => {
+      if(!has) return '<span class="doc-thumb empty">—</span>';
+      const u = url(tipo);
+      if(kind === 'image'){
+        return `<img class="doc-thumb" src="${u}" onclick="verGrande('${u}','image')" alt="${tipo}">`;
+      }
+      const label = kind === 'pdf' ? 'PDF' : 'Arquivo';
+      return `<span class="doc-thumb empty" title="Abrir ${label} em nova aba" onclick="verGrande('${u}','${kind||'other'}')" style="cursor:pointer;color:#5b3d95;font-weight:700;font-size:12px">${label}</span>`;
+    };
     return `<tr>
       <td><input type="checkbox" ${cs} onchange="toggleSel('${d.cpf}', this.checked)" data-testid="chk-${d.cpf}"></td>
       <td><strong>${escapeHtml(d.nome)}</strong><br><span style="color:#8a7fa3;font-size:11px">${escapeHtml(d.cpf)}</span></td>
       <td><span class="badge">${escapeHtml(d.doc_tipo)}</span></td>
-      <td>${d.has_frente ? `<img class="doc-thumb" src="${url('frente')}" onclick="verGrande(this.src)" alt="Frente">` : '<span class="doc-thumb empty">—</span>'}</td>
-      <td>${d.has_verso ? `<img class="doc-thumb" src="${url('verso')}" onclick="verGrande(this.src)" alt="Verso">` : '<span class="doc-thumb empty">—</span>'}</td>
+      <td>${cell('frente', d.has_frente, d.frente_kind)}</td>
+      <td>${cell('verso', d.has_verso, d.verso_kind)}</td>
     </tr>`;
   }).join('');
   el.innerHTML = `<table>
@@ -187,7 +196,8 @@ async function baixarZip(body){
   }catch(e){ alert('Erro ao baixar: ' + e.message); }
 }
 
-function verGrande(src){
+function verGrande(src, kind){
+  if(kind && kind !== 'image'){ window.open(src, '_blank'); return; }
   document.getElementById('modal-img').src = src;
   document.getElementById('modal').classList.add('show');
 }

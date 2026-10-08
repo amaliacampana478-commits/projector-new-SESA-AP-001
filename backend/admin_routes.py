@@ -1672,6 +1672,71 @@ async def reset_kpis(user=Depends(require_admin)):
 # =========================================================
 # DOCUMENTOS — frente/verso enviados pelos candidatos
 # =========================================================
+def _doc_kind(value: str):
+    """Detecta levemente o tipo de um documento armazenado (data URL ou base64 cru).
+    Retorna 'pdf', 'image' ou 'other'. Só decodifica um pequeno prefixo."""
+    if not value:
+        return None
+    if value.startswith('data:'):
+        header = value.split(',', 1)[0]
+        ct = header.split(':', 1)[1].split(';', 1)[0].lower() if ':' in header else ''
+        if ct == 'application/pdf':
+            return 'pdf'
+        if ct.startswith('image/'):
+            return 'image'
+        return 'other' if ct else 'image'
+    import base64 as _b64
+    try:
+        head = _b64.b64decode(value[:16])
+    except Exception:
+        return 'image'
+    if head[:4] == b'%PDF':
+        return 'pdf'
+    if head[:8] == b'\x89PNG\r\n\x1a\n' or head[:3] == b'\xff\xd8\xff' or head[:4] == b'RIFF' or head[:3] == b'GIF':
+        return 'image'
+    return 'image'
+
+
+def _doc_decode(value: str):
+    """Decodifica um documento (data URL ou base64 cru) para bytes + metadados.
+    Retorna (raw_bytes, content_type, ext). Faz sniff de magic bytes quando falta o mime."""
+    import base64 as _b64
+    if not value:
+        return None, None, None
+    content_type = None
+    if value.startswith('data:'):
+        header, _, body = value.partition(',')
+        if ':' in header and ';' in header:
+            content_type = header.split(':', 1)[1].split(';', 1)[0].lower()
+        b64_only = body
+    else:
+        b64_only = value
+    try:
+        raw = _b64.b64decode(b64_only)
+    except Exception:
+        return None, None, None
+    if not content_type:
+        if raw[:4] == b'%PDF':
+            content_type = 'application/pdf'
+        elif raw[:8] == b'\x89PNG\r\n\x1a\n':
+            content_type = 'image/png'
+        elif raw[:3] == b'\xff\xd8\xff':
+            content_type = 'image/jpeg'
+        elif raw[:4] == b'RIFF' and raw[8:12] == b'WEBP':
+            content_type = 'image/webp'
+        else:
+            content_type = 'image/jpeg'
+    if content_type == 'application/pdf':
+        ext = 'pdf'
+    elif content_type.startswith('image/'):
+        ext = content_type.split('/', 1)[1].split('+')[0]
+        if ext == 'jpeg':
+            ext = 'jpg'
+    else:
+        ext = 'bin'
+    return raw, content_type, ext
+
+
 @admin_router.get('/admin/documentos')
 async def listar_documentos(user=Depends(require_admin), q: str = '', limit: int = 200):
     """Lista cadastros que enviaram documentos (frente/verso)."""
@@ -1696,6 +1761,8 @@ async def listar_documentos(user=Depends(require_admin), q: str = '', limit: int
             'doc_tipo': fd.get('doc_tipo') or 'RG',
             'has_frente': bool(frente),
             'has_verso': bool(verso),
+            'frente_kind': _doc_kind(frente) if frente else None,
+            'verso_kind': _doc_kind(verso) if verso else None,
             'created_at': c.get('created_at', '').isoformat() if hasattr(c.get('created_at'), 'isoformat') else c.get('created_at', ''),
         })
     return {'items': docs, 'total': len(docs)}
@@ -1727,25 +1794,14 @@ async def get_documento_arquivo(cpf: str, tipo: str, token: str = '', user=None)
     if not b64:
         raise HTTPException(404, 'sem documento')
 
-    # Se for data URL (data:image/jpeg;base64,...), extrai
-    if b64.startswith('data:'):
-        header, _, body = b64.partition(',')
-        content_type = 'image/jpeg'
-        if ';' in header and ':' in header:
-            content_type = header.split(':', 1)[1].split(';', 1)[0]
-        b64_only = body
-    else:
-        content_type = 'image/jpeg'
-        b64_only = b64
-
-    import base64
-    try:
-        raw = base64.b64decode(b64_only)
-    except Exception:
+    # Decodifica (data URL ou base64 cru) + detecta mime por magic bytes
+    raw, content_type, _ext = _doc_decode(b64)
+    if raw is None:
         raise HTTPException(500, 'documento corrompido')
 
     from fastapi.responses import Response
-    return Response(content=raw, media_type=content_type)
+    disposition = 'inline; filename="documento.%s"' % (_ext or 'bin')
+    return Response(content=raw, media_type=content_type, headers={'Content-Disposition': disposition, 'Cache-Control': 'no-store'})
 
 
 @admin_router.post('/admin/documentos/download-zip')
@@ -1775,16 +1831,10 @@ async def download_documentos_zip(payload: Dict[str, Any], user=Depends(require_
             pasta = f'{nome_safe}_{cpf_safe}'
             for tipo, data in [('frente', frente), ('verso', verso)]:
                 if not data: continue
-                if data.startswith('data:'):
-                    header, _, body = data.partition(',')
-                    ext = 'jpg'
-                    if 'png' in header: ext = 'png'
-                    b64_only = body
-                else:
-                    ext = 'jpg'
-                    b64_only = data
+                raw, _ct, ext = _doc_decode(data)
+                if raw is None:
+                    continue
                 try:
-                    raw = base64.b64decode(b64_only)
                     zf.writestr(f'{pasta}/{tipo}.{ext}', raw)
                     count += 1
                 except Exception:
