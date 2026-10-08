@@ -837,26 +837,28 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
 </fieldset>
 <fieldset id="fs-prova-local">
 <label class="description">Local de Prova</label>
+<input type="hidden" id="UF_PROVA" name="UF_PROVA" value="AP">
 <div class="fgv-field">
-<label><span class="error">*</span> Selecione o estado para a realização da prova:</label>
-<select class="select" data-testid="select-uf-prova" id="UF_PROVA" name="UF_PROVA" required="">
-<option value="AP" selected="">Amapá / AP</option>
+<label><span class="error">*</span> Local de prova</label>
+<select class="select" data-testid="select-municipio-prova" id="MUNICIPIO_PROVA" name="MUNICIPIO_PROVA" required="">
+<option value="" selected=""></option>
+<option value="LARANJAL DO JARI/AP">LARANJAL DO JARI/AP</option>
+<option value="MACAPÁ/AP">MACAPÁ/AP</option>
+<option value="OIAPOQUE/AP">OIAPOQUE/AP</option>
 </select>
 </div>
 <div class="fgv-field">
-<label><span class="error">*</span> Selecione o município para a realização da prova:</label>
-<select class="select" data-testid="select-municipio-prova" id="MUNICIPIO_PROVA" name="MUNICIPIO_PROVA" required="">
-<option value="Macapá / AP" selected="">Macapá / AP</option>
+<label><span class="error">*</span> Local de lotação</label>
+<select class="select" data-testid="select-local-lotacao" id="LOCAL_LOTACAO" name="LOCAL_LOTACAO" required="">
+<option value="" selected=""></option>
+<option value="211 - Região I - Central (Municípios de abrangência: Macapá, Cutias, Itaubal, Ferreira Gomes, Porto Grande, Pedra Branca do Amapari e Serra do Navio)">211 - Região I - Central (Municípios de abrangência: Macapá, Cutias, Itaubal, Ferreira Gomes, Porto Grande, Pedra Branca do Amapari e Serra do Navio)</option>
 </select>
 </div>
 <script>
 (function(){
  document.addEventListener('DOMContentLoaded', function(){
    var uf = document.getElementById('UF_PROVA');
-   var mun = document.getElementById('MUNICIPIO_PROVA');
-   if(!uf||!mun) return;
-   // Amapá fixo: pre-seleciona AP (único estado do certame SESA/AP)
-   if(uf.value !== 'AP'){ uf.value = 'AP'; }
+   if(uf && uf.value !== 'AP'){ uf.value = 'AP'; }
  });
 })();
 </script>
