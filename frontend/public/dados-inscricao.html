@@ -1884,4 +1884,102 @@ html, body { overflow-x: hidden !important; }
   }
 }
 </style>
+
+<style id="aocp-redesign-v1">
+:root{
+  --aocp-green:#36a980; --aocp-green-d:#2b8a68; --aocp-ink:#17345c; --aocp-blue:#1858BF;
+  --aocp-border:#e6eaf1; --aocp-muted:#6b7a90; --aocp-bg:#f4f7fb; --aocp-card:#ffffff;
+}
+body{ background:var(--aocp-bg)!important; }
+/* ---- Section cards (fieldset) ---- */
+form#frm-style-list fieldset{
+  background:var(--aocp-card)!important;
+  border:1px solid var(--aocp-border)!important;
+  border-radius:18px!important;
+  padding:26px 26px 22px!important;
+  margin:0 0 22px!important;
+  box-shadow:0 6px 22px rgba(23,52,92,.06)!important;
+  position:relative; overflow:hidden;
+  transition:box-shadow .25s ease, transform .25s ease;
+}
+form#frm-style-list fieldset:hover{ box-shadow:0 10px 30px rgba(23,52,92,.10)!important; }
+form#frm-style-list fieldset::before{
+  content:""; position:absolute; left:0; top:0; height:100%; width:5px;
+  background:linear-gradient(180deg,var(--aocp-green),var(--aocp-blue)); opacity:.9;
+}
+/* ---- Section title ---- */
+form#frm-style-list label.description{
+  display:block!important; font-size:16px!important; font-weight:800!important;
+  color:var(--aocp-ink)!important; letter-spacing:.2px; margin:0 0 16px!important;
+  text-transform:uppercase; padding-bottom:10px; border-bottom:2px solid #eef2f7;
+}
+form#frm-style-list label.description.error{ border:0!important; margin:0!important; padding:0!important; }
+/* ---- Field groups ---- */
+form#frm-style-list .fgv-field{ margin:0 0 16px!important; }
+form#frm-style-list .fgv-field > label{
+  display:block; font-size:13.5px!important; font-weight:600!important;
+  color:#3b4a60!important; margin:0 0 7px!important;
+}
+form#frm-style-list .fgv-field > label .error{ color:#e23b3b!important; font-weight:800; margin-right:3px; }
+/* ---- Inputs & selects ---- */
+form#frm-style-list select.select,
+form#frm-style-list input[type=text],
+form#frm-style-list input[type=email],
+form#frm-style-list input[type=tel],
+form#frm-style-list input[type=date],
+form#frm-style-list input[type=number],
+form#frm-style-list input[type=password],
+form#frm-style-list textarea{
+  width:100%!important;
+  min-height:48px!important;
+  border:1.6px solid var(--aocp-border)!important;
+  border-radius:12px!important;
+  background-color:#fff!important;
+  padding:10px 14px!important;
+  font-size:15px!important; color:#1f2a3a!important;
+  box-shadow:0 1px 2px rgba(16,24,40,.04)!important;
+  transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+form#frm-style-list select.select:hover,
+form#frm-style-list input:hover,
+form#frm-style-list textarea:hover{ border-color:#c3cad6!important; }
+form#frm-style-list select.select:focus,
+form#frm-style-list input:focus,
+form#frm-style-list textarea:focus{
+  outline:none!important;
+  border-color:var(--aocp-green)!important;
+  box-shadow:0 0 0 3.5px rgba(54,169,128,.22)!important;
+  background-color:#fbfffd!important;
+}
+/* ---- Checkboxes ---- */
+form#frm-style-list input[type=checkbox]{
+  width:20px!important; height:20px!important; accent-color:var(--aocp-green)!important; cursor:pointer;
+  border-radius:6px;
+}
+/* ---- Primary / submit button ---- */
+form#frm-style-list input.button,
+form#frm-style-list input[type=submit],
+form#frm-style-list button[type=submit]{
+  background:linear-gradient(180deg,var(--aocp-green),var(--aocp-green-d))!important;
+  color:#fff!important; border:0!important; border-radius:12px!important;
+  padding:14px 30px!important; font-size:15px!important; font-weight:700!important;
+  letter-spacing:.3px; cursor:pointer;
+  box-shadow:0 8px 18px rgba(54,169,128,.32)!important;
+  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+form#frm-style-list input.button:not([disabled]):hover,
+form#frm-style-list input[type=submit]:not([disabled]):hover{
+  transform:translateY(-1px); filter:brightness(1.04);
+  box-shadow:0 12px 26px rgba(54,169,128,.40)!important;
+}
+form#frm-style-list input.button[disabled]{ filter:grayscale(.2); }
+/* ---- "Deseja concorrer / PCD" selectable card ---- */
+form#frm-style-list label[class*="card"], form#frm-style-list .aec-choice{
+  border-radius:14px!important;
+}
+/* ---- Header edital card polish ---- */
+.aec-card{ border-radius:18px!important; border:1px solid var(--aocp-border)!important; box-shadow:0 6px 22px rgba(23,52,92,.06)!important; overflow:hidden; }
+.aec-head{ background:linear-gradient(90deg,#f3f8ff,#ffffff)!important; }
+.aec-head h3{ color:var(--aocp-ink)!important; }
+</style>
 </body></html>
