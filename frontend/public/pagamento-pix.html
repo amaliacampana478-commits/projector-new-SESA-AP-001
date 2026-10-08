@@ -1677,4 +1677,16 @@ body{ background:var(--aocp-bg)!important; }
 .blocoPadrao .dados table{ border-collapse:separate!important; border-spacing:0!important; }
 #pix-content > table td{ padding:12px 16px 12px 0!important; border-bottom:1px solid #eef1f4!important; vertical-align:top!important; }
 </style>
+
+<script>
+(function(){
+  function fix(){
+    var host=document.getElementById('aocp-header-host');
+    var lo=host&&host.shadowRoot&&host.shadowRoot.getElementById('logout');
+    if(lo){ lo.setAttribute('href','/minhas-inscricoes.html'); var s=lo.querySelector('strong'); if(s)s.textContent='Minhas inscrições'; else lo.textContent='Minhas inscrições'; return true; }
+    return false;
+  }
+  var n=0,t=setInterval(function(){ if(fix()||++n>40) clearInterval(t); },100);
+})();
+</script>
 </body></html>
