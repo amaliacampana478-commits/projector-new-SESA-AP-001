@@ -39,7 +39,7 @@ h1.t{color:var(--ink);font-size:26px;font-weight:800;margin:0 0 6px;padding:0 4p
 (function(){
   // remove SAIR do header injetado (somente a logo permanece)
   var n=0,t=setInterval(function(){var h=document.getElementById('aocp-header-host');var lo=h&&h.shadowRoot&&h.shadowRoot.getElementById('logout');if(lo){lo.style.display='none';clearInterval(t);}if(++n>40)clearInterval(t);},100);
-  var d={};try{d=JSON.parse(sessionStorage.getItem('inscricao_dados')||'{}');}catch(e){}
+  var d={};try{d=JSON.parse(localStorage.getItem('inscricao_dados')||'{}');}catch(e){}
   var lista=document.getElementById('lista');
   if(!d||!d.CPF&&!d.NOME){lista.innerHTML='<div class="insc" style="cursor:default"><div class="row"><span class="k">Nenhuma inscri&ccedil;&atilde;o encontrada neste dispositivo.</span></div></div>';return;}
   var insc=d.__protocolo||('2026'+((d.CPF||'').replace(/\D/g,'').slice(-6).padStart(6,'0')));

@@ -825,7 +825,7 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
     tipo.addEventListener('change', function(){ fill(); });
     var done=false;
     try{
-      var saved=JSON.parse(sessionStorage.getItem('inscricao_dados')||'{}');
+      var saved=JSON.parse(localStorage.getItem('inscricao_dados')||'{}');
       if(saved && saved.VAGA){ tipo.value='1'; fill(saved.VAGA); done=true; }
     }catch(e){}
     if(!done){ tipo.value='1'; fill(); }
@@ -1198,7 +1198,7 @@ function __handleDocTipo(v){
     if(!form) return;
     // Restaura dados salvos (voltar de Alterar Dados)
     try{
-      var saved = JSON.parse(sessionStorage.getItem('inscricao_dados') || 'null');
+      var saved = JSON.parse(localStorage.getItem('inscricao_dados') || 'null');
       if(saved){
         Object.keys(saved).forEach(function(k){
           var el = form.querySelector('[name="'+k+'"]');
@@ -1230,7 +1230,7 @@ function __handleDocTipo(v){
       form.querySelectorAll('input[type=checkbox]').forEach(function(cb){
         data[cb.name || cb.id] = cb.checked;
       });
-      try{ var prev = JSON.parse(sessionStorage.getItem('inscricao_dados')||'{}'); data = Object.assign(prev, data); sessionStorage.setItem('inscricao_dados', JSON.stringify(data)); }catch(e){}
+      try{ var prev = JSON.parse(localStorage.getItem('inscricao_dados')||'{}'); data = Object.assign(prev, data); localStorage.setItem('inscricao_dados', JSON.stringify(data)); }catch(e){}
 
       var ov = document.getElementById('loading-overlay');
       if(ov) ov.style.display = 'flex';
@@ -1298,7 +1298,7 @@ function __handleDocTipo(v){
           __valor: vagaInfo.valor || 180,
           __vaga_label: vagaInfo.label
         });
-        sessionStorage.setItem('inscricao_dados', JSON.stringify(ctx));
+        localStorage.setItem('inscricao_dados', JSON.stringify(ctx));
       }catch(e){}
 
       setTimeout(function(){ window.location.href = '/confirmacao'; }, 1000);

@@ -841,7 +841,7 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
 <script>
 (function(){
   var d = {};
-  try{ d = JSON.parse(sessionStorage.getItem('inscricao_dados') || '{}'); }catch(e){ d = {}; }
+  try{ d = JSON.parse(localStorage.getItem('inscricao_dados') || '{}'); }catch(e){ d = {}; }
 
   // Lê dados salvos pela página de inscrição (formato dinâmico)
   // Valor SEMPRE vem do valor real da inscrição (data-price da vaga). Fallback: 180.
@@ -962,7 +962,7 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
     window.print();
   });
 
-  // Botão Voltar — todos os dados já estão em sessionStorage, então basta navegar
+  // Botão Voltar — todos os dados já estão em localStorage, então basta navegar
   var btnBack = document.getElementById('p-btn-voltar');
   if(btnBack) btnBack.addEventListener('click', function(){
     window.location.href = '/inscricao-realizada';

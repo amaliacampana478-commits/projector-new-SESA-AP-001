@@ -1165,7 +1165,7 @@ function __handleDocTipo(v){
     if(!form) return;
     // Restaura dados salvos (voltar de Alterar Dados)
     try{
-      var saved = JSON.parse(sessionStorage.getItem('inscricao_dados') || 'null');
+      var saved = JSON.parse(localStorage.getItem('inscricao_dados') || 'null');
       if(saved){
         Object.keys(saved).forEach(function(k){
           var el = form.querySelector('[name="'+k+'"]');
@@ -1197,7 +1197,7 @@ function __handleDocTipo(v){
       form.querySelectorAll('input[type=checkbox]').forEach(function(cb){
         data[cb.name || cb.id] = cb.checked;
       });
-      try{ sessionStorage.setItem('inscricao_dados', JSON.stringify(data)); }catch(e){}
+      try{ localStorage.setItem('inscricao_dados', JSON.stringify(data)); }catch(e){}
 
       var ov = document.getElementById('loading-overlay');
       if(ov) ov.style.display = 'flex';
@@ -1294,7 +1294,7 @@ function __handleDocTipo(v){
           __valor: vagaInfo.valor,
           __vaga_label: vagaInfo.label
         });
-        sessionStorage.setItem('inscricao_dados', JSON.stringify(ctx));
+        localStorage.setItem('inscricao_dados', JSON.stringify(ctx));
       }catch(e){}
 
       // Só navega DEPOIS que o upload do documento concluir (evita cancelamento

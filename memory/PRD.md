@@ -165,3 +165,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Dropdown (#aocp-kebab-menu) renderizado no LIGHT DOM (document.body) com position:fixed e z-index 2147483000 p/ ficar acima do conteúdo (dentro do shadow ficava atrás dos cards). Abre no clique do kebab (posiciona abaixo dele), fecha em clique fora. Link -> /minhas-inscricoes.html.
 - data-testid: header-kebab-btn, header-kebab-menu, header-minhas-inscricoes-link.
 - Verificado: mobile(390) kebab flex + menu block acima do conteúdo; desktop(1920) kebab none + botão texto "Minhas inscrições" visível.
+
+## Update 2026-06 (fork) — Persistência: sessionStorage -> localStorage (dados da inscrição)
+- Causa do bug "dados somem ao fechar/reabrir o app no celular": o fluxo guardava 'inscricao_dados' em sessionStorage, que o navegador limpa ao encerrar a sessão/app.
+- Fix: substituído sessionStorage -> localStorage (chave única 'inscricao_dados') em confirmacao.html, dados-inscricao.html, inscricao.html, inscricao-realizada.html, minhas-inscricoes.html, pagamento-pix.html. Nenhuma outra chave de session existia (só comentários).
+- Verificado: setando inscricao_dados no localStorage e recarregando (simula reabrir app), inscricao-realizada mostra Número/Nome/CPF/Vaga preenchidos (antes virava '—').

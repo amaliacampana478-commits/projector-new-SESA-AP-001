@@ -803,7 +803,7 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
 <script>
 (function(){
   var d = {};
-  try{ d = JSON.parse(sessionStorage.getItem('inscricao_dados') || '{}'); }catch(e){ d = {}; }
+  try{ d = JSON.parse(localStorage.getItem('inscricao_dados') || '{}'); }catch(e){ d = {}; }
   function set(id, val){
     var el = document.getElementById(id);
     if(el) el.textContent = (val && String(val).trim()) ? val : '—';
@@ -816,7 +816,7 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
   var novo_protocolo = ano_edital + protoNum;
   if(!d.__protocolo || d.__protocolo !== novo_protocolo){
     d.__protocolo = novo_protocolo;
-    try{ sessionStorage.setItem('inscricao_dados', JSON.stringify(d)); }catch(e){}
+    try{ localStorage.setItem('inscricao_dados', JSON.stringify(d)); }catch(e){}
   }
   var insc = d.__protocolo;
   set('c-inscricao', insc);
@@ -885,10 +885,10 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
     bConf.disabled = true;
     bConf.style.opacity = '0.6';
     bConf.textContent = 'Enviando...';
-    // Salva protocolo em sessionStorage para a próxima página consumir
+    // Salva protocolo em localStorage para a próxima página consumir
     try{
       d.__protocolo = protocolo;
-      sessionStorage.setItem('inscricao_dados', JSON.stringify(d));
+      localStorage.setItem('inscricao_dados', JSON.stringify(d));
     }catch(e){}
     // Mostra overlay de loading enquanto envia
     var ov = document.getElementById('conf-loading');
