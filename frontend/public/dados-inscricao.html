@@ -1984,18 +1984,19 @@ form#frm-style-list label[class*="card"], form#frm-style-list .aec-choice{
   .Miolo > div{padding-left:2px!important;padding-right:2px!important;}
   #frm-style-list fieldset:has(> label.decl-veracidade){
     display:block!important;
-    padding-left:4px!important;
+    padding-left:6px!important;
     padding-right:6px!important;
   }
   #frm-style-list fieldset > label.decl-veracidade,
   .decl-veracidade{
-    display:block!important;
-    position:relative!important;
+    display:flex!important;
+    flex-direction:column-reverse!important;
+    align-items:flex-start!important;
+    gap:14px!important;
     box-sizing:border-box!important;
-    width:auto!important;
+    width:100%!important;
     max-width:100%!important;
-    padding-left:26px!important;
-    padding-right:2px!important;
+    padding:0!important;
     font-size:12px!important;
     line-height:1.55!important;
     font-weight:600!important;
@@ -2004,10 +2005,10 @@ form#frm-style-list label[class*="card"], form#frm-style-list .aec-choice{
     color:#2b3a4d!important;
   }
   .decl-veracidade input[type=checkbox]{
-    position:absolute!important;
-    left:0!important;top:2px!important;
-    width:18px!important;height:18px!important;
-    margin:0!important;float:none!important;
+    position:static!important;
+    float:none!important;
+    width:20px!important;height:20px!important;
+    margin:0!important;
   }
 }
 </style></body></html>

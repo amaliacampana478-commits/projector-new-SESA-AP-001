@@ -149,3 +149,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Após 1a correção, o bloco ficava empurrado p/ direita: fieldset da declaração tinha padding-left:26px + display:flex e o label width:100% forçado estourava o pai.
 - Fix (mobile): #frm-style-list fieldset:has(> label.decl-veracidade){display:block;padding 4px/6px}. Label: box-sizing:border-box, width:auto, max-width:100%, padding-left:26px (espaço p/ checkbox absoluto), padding-right:2px.
 - Resultado 390px: checkbox left~49 (topo-esq), label 23->365, texto preenche a largura, overflowCount 0. Desktop inalterado.
+
+## Update 2026-06 (fork) — dados-inscricao.html declaração: checkbox ABAIXO do texto (mobile) [final]
+- Pedido do usuário: igual aos outros blocos (texto primeiro, quadradinho de marcar embaixo da última linha).
+- Fix (mobile): .decl-veracidade -> display:flex; flex-direction:column-reverse (DOM é <input> depois texto; reverse coloca texto em cima e checkbox embaixo); align-items:flex-start; gap:14px; width:100%; padding:0; font 12px, sem caixa-alta. checkbox 20x20, position:static. Fieldset da decl via :has() display:block padding 6px.
+- Verificado 390px: checkbox abaixo do texto (cbBelowText true), left~25, overflow 0. Desktop inalterado.
