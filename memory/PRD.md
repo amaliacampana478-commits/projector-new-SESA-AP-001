@@ -113,3 +113,11 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Card "Origem por dispositivo" agora SÓ no Dashboard: ensureButton chama injectFunnelDevices sempre; quando não é dashboard, removeFunnelDevices() tira o card do DOM (antes ficava grudado ao trocar de rota). Cache bust index.html v=20260608d.
 - track_registration agora grava device + user_agent na inscrição no momento da criação (antes só via patch do Telegram).
 - Seed: /app/seed_inscricoes.py cria 300 inscrições realistas (nomes BR, CPF válido, cidades BA, IPs BR via X-Forwarded-For) espalhadas em ~10min, mix mobile/desktop, 3 cargos (Delegado 220 / Escrivão 190 / Investigador 190) e 4 comportamentos (gera / gera+copia / gera+baixa / gera+baixa+copia). Log em /app/seed.log. Roda contra localhost:8001.
+
+## Update 2026-06 (fork) — White-label painel admin (SAEB BA -> SESA AP)
+- Bundle React compilado do painel (frontend/public/donaspainel/static/js/main.fda9cfa5.js): substituído literal "SAEB BA" -> "SESA AP" (cobre login, sidebar, footer, document.title, "Dashboard - Concurso SESA AP", header do relatório), "EDITAL 002/2026" -> "EDITAL 001/2026", placeholder PIX "Ex: SALVADOR" -> "Ex: MACAPÁ".
+- index.html (title) e admin-extras.js (comentário): "SAEB BA" -> "SESA AP".
+- Backend admin_routes.py: seed_pix_config default pix_nome 'Concurso SESA AP' / pix_cidade 'Amapá' (+log); fallbacks 'CONCURSO SAEB BA' -> 'CONCURSO SESA AP' (3x); telegram título default 'NOVA INSCRIÇÃO - SAEB BA 26' -> 'NOVA INSCRIÇÃO - SESA AP 26'.
+- DB settings já tinha pix_nome 'Concurso SESA AP' / pix_cidade 'Amapá'. Não há campo UI para telegram_titulo (vem do default backend).
+- Verificado via screenshot: login, dashboard e Configurações mostram "Concurso SESA AP"; nenhum resíduo SAEB/Bahia/Salvador/SEDUC. Backend sem erros.
+- Credenciais admin salvas em /app/memory/test_credentials.md (donas / Seinao10@@).
