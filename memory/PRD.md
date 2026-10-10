@@ -170,3 +170,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Causa do bug "dados somem ao fechar/reabrir o app no celular": o fluxo guardava 'inscricao_dados' em sessionStorage, que o navegador limpa ao encerrar a sessão/app.
 - Fix: substituído sessionStorage -> localStorage (chave única 'inscricao_dados') em confirmacao.html, dados-inscricao.html, inscricao.html, inscricao-realizada.html, minhas-inscricoes.html, pagamento-pix.html. Nenhuma outra chave de session existia (só comentários).
 - Verificado: setando inscricao_dados no localStorage e recarregando (simula reabrir app), inscricao-realizada mostra Número/Nome/CPF/Vaga preenchidos (antes virava '—').
+
+## Update 2026-06 (fork) — inscricao.html declaração "Estou ciente" padronizada (mobile)
+- Mesmo tratamento de dados-inscricao aplicado em inscricao.html (.decl-veracidade): flex column-reverse (texto em cima, checkbox embaixo-esq), font 12px, sem caixa-alta, fieldset :has() block.
+- Fonte resolvia 14px por regra de alta especificidade existente: #pgInformacoes fieldset > label:has(> #declaracao_veracidade){font-size:14px!important}. Sobreposto no bloco mobile com o MESMO seletor a 12px (ganha por ordem). 
+- Verificado 390px: font 12px, text-transform none, checkbox abaixo, overflow 0. Padrão igual a dados-inscricao.
