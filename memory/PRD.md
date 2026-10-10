@@ -184,3 +184,7 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Pedido: rótulo (negrito PRETO) + valor na MESMA linha; valor longo deve quebrar usando a largura toda (continuação inicia à esquerda, sob o rótulo), sem ficar preso em coluna estreita.
 - inscricao-realizada (.blocoPadrao table) e pagamento-pix (#pix-content > table): no @media mobile, table/tbody=block, tr=block (borda inferior), td=display:inline (fluxo de texto), td do rótulo (first-child / [style*=font-weight:bold][white-space:nowrap]) = inline, font-weight 700, color #111, margin-right 6px.
 - Rótulo cinza (var(--aocp-muted)) da realizada vencido com especificidade extra: html body .blocoPadrao .dados table td:first-child{color:#111!important}. Verificado: cor rgb(17,17,17); vaga longa quebra em largura total. PIX label cor #111 confirmada.
+
+## Update 2026-06 (fork) — minhas-inscricoes.html: card do edital igual às demais
+- O card do edital em minhas-inscricoes usava estilo próprio (título grande navy 20px, logo 150px, cabeçalho gradiente azul), diferente das outras páginas (.aocp-edital-card compacto).
+- Fix: override no <style> de minhas-inscricoes replicando o padrão: .edhead bg #f5f5f5, h3 23px/weight400/#333 (12px no mobile), .edbody img 190px (80px e centralizado no mobile), .edtxt #333. Media max-width:640 igual ao .aocp-edital-card. Verificado via screenshot 390px: idêntico à dados-inscricao.
