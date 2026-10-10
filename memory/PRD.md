@@ -144,3 +144,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Problema (mobile): label .decl-veracidade com fonte grande/caixa-alta/negrito azul e checkbox mal posicionado (texto quebrava mal ao lado da caixa).
 - Fix no bloco <style> mobile (@media max-width:640) do dados-inscricao.html: .decl-veracidade -> display:block, position:relative, padding-left:28px, font-size:12px, line-height 1.55, text-transform:none, color #2b3a4d; checkbox -> position:absolute left0 top2 (18x18), float:none. Checkbox fica no topo-esquerda, texto recuado ao lado.
 - Seletor com ID (#frm-style-list fieldset > label.decl-veracidade) + !important para vencer regras genéricas. Desktop inalterado. Verificado via screenshot 390px.
+
+## Update 2026-06 (fork) — dados-inscricao.html declaração: corrigido vão lateral (mobile)
+- Após 1a correção, o bloco ficava empurrado p/ direita: fieldset da declaração tinha padding-left:26px + display:flex e o label width:100% forçado estourava o pai.
+- Fix (mobile): #frm-style-list fieldset:has(> label.decl-veracidade){display:block;padding 4px/6px}. Label: box-sizing:border-box, width:auto, max-width:100%, padding-left:26px (espaço p/ checkbox absoluto), padding-right:2px.
+- Resultado 390px: checkbox left~49 (topo-esq), label 23->365, texto preenche a largura, overflowCount 0. Desktop inalterado.

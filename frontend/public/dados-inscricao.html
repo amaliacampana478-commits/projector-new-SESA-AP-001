@@ -1982,11 +1982,20 @@ form#frm-style-list label[class*="card"], form#frm-style-list .aec-choice{
 @media (max-width:640px){
   .Miolo{padding-left:6px!important;padding-right:6px!important;}
   .Miolo > div{padding-left:2px!important;padding-right:2px!important;}
+  #frm-style-list fieldset:has(> label.decl-veracidade){
+    display:block!important;
+    padding-left:4px!important;
+    padding-right:6px!important;
+  }
   #frm-style-list fieldset > label.decl-veracidade,
   .decl-veracidade{
     display:block!important;
     position:relative!important;
-    padding-left:28px!important;
+    box-sizing:border-box!important;
+    width:auto!important;
+    max-width:100%!important;
+    padding-left:26px!important;
+    padding-right:2px!important;
     font-size:12px!important;
     line-height:1.55!important;
     font-weight:600!important;
