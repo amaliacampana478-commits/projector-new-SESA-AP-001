@@ -175,3 +175,7 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Mesmo tratamento de dados-inscricao aplicado em inscricao.html (.decl-veracidade): flex column-reverse (texto em cima, checkbox embaixo-esq), font 12px, sem caixa-alta, fieldset :has() block.
 - Fonte resolvia 14px por regra de alta especificidade existente: #pgInformacoes fieldset > label:has(> #declaracao_veracidade){font-size:14px!important}. Sobreposto no bloco mobile com o MESMO seletor a 12px (ganha por ordem). 
 - Verificado 390px: font 12px, text-transform none, checkbox abaixo, overflow 0. Padrão igual a dados-inscricao.
+
+## Update 2026-06 (fork) — pagamento-pix.html: mesmo menu kebab mobile
+- Aplicado em pagamento-pix.html o mesmo script do inscricao-realizada: desktop renomeia #logout -> "Minhas inscrições"; mobile (<=991) esconde #logout e mostra kebab (3 pontinhos) no .navbar-end; dropdown no light DOM (fixed, z-index alto) com link /minhas-inscricoes.html.
+- Verificado: mobile(390) kebab flex + menu block; desktop(1920) kebab none + botão texto.
