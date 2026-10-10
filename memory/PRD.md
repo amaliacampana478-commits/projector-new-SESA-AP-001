@@ -127,3 +127,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Fix: script injetado antes de </body> (neutralizeHeaderLinks) reescreve TODOS os anchors dentro de 'header nav' para href='inicio.html' e remove target/rel/download. Cobre menu desktop e menu mobile (drawer) de uma vez.
 - Resultado: clicar qualquer título recarrega e volta para a página inicial; nenhum link sai do site.
 - Verificado via screenshot_tool: 31 anchors, 0 externos em desktop(1920) e mobile(390).
+
+## Update 2026-06 (fork) — inscricao.html: cards mais largos no mobile
+- Mobile tinha ~30px de gutter lateral por conta de .Miolo (padding 0 24px) + wrapper interno (6px). Cards ficavam estreitos e centralizados.
+- Fix: <style> mobile-only (@media max-width:640px) no fim do inscricao.html: .Miolo padding lateral 6px + .Miolo>div 2px. Colocado por último para vencer as várias regras .Miolo existentes (!important).
+- Resultado (390px): edital-card 330->366px, form 318->354px, gutter ~12px/lado, 0 overflow. Desktop inalterado (regra só mobile). Verificado via screenshot_tool.
