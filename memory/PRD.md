@@ -154,3 +154,7 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Pedido do usuário: igual aos outros blocos (texto primeiro, quadradinho de marcar embaixo da última linha).
 - Fix (mobile): .decl-veracidade -> display:flex; flex-direction:column-reverse (DOM é <input> depois texto; reverse coloca texto em cima e checkbox embaixo); align-items:flex-start; gap:14px; width:100%; padding:0; font 12px, sem caixa-alta. checkbox 20x20, position:static. Fieldset da decl via :has() display:block padding 6px.
 - Verificado 390px: checkbox abaixo do texto (cbBelowText true), left~25, overflow 0. Desktop inalterado.
+
+## Update 2026-06 (fork) — dados-inscricao.html: Local de lotação auto-selecionado
+- Select #LOCAL_LOTACAO tinha placeholder vazio (selected) + 1 opção real "211 - Região I - Central (...)".
+- Fix: removido o <option value="" selected> e adicionado selected="" na única opção real. Agora vem pré-selecionada em mobile e desktop (optCount 1, selectedIndex 0). Satisfaz o required automaticamente.
