@@ -158,3 +158,10 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 ## Update 2026-06 (fork) — dados-inscricao.html: Local de lotação auto-selecionado
 - Select #LOCAL_LOTACAO tinha placeholder vazio (selected) + 1 opção real "211 - Região I - Central (...)".
 - Fix: removido o <option value="" selected> e adicionado selected="" na única opção real. Agora vem pré-selecionada em mobile e desktop (optCount 1, selectedIndex 0). Satisfaz o required automaticamente.
+
+## Update 2026-06 (fork) — inscricao-realizada.html: menu "três pontinhos" no header mobile
+- Mobile: o botão #logout (renomeado p/ "Minhas inscrições") ficava oculto (@media 991) e nada aparecia. Pedido: kebab (3 pontinhos) à direita que abre "Minhas inscrições".
+- Script injetado (shadow DOM via aocp-header-host.shadowRoot): no desktop renomeia #logout -> "Minhas inscrições" (/minhas-inscricoes.html). Cria botão #aocp-kebab no .navbar-end (SVG 3 bolinhas), visível só <=991px; #logout escondido <=991.
+- Dropdown (#aocp-kebab-menu) renderizado no LIGHT DOM (document.body) com position:fixed e z-index 2147483000 p/ ficar acima do conteúdo (dentro do shadow ficava atrás dos cards). Abre no clique do kebab (posiciona abaixo dele), fecha em clique fora. Link -> /minhas-inscricoes.html.
+- data-testid: header-kebab-btn, header-kebab-menu, header-minhas-inscricoes-link.
+- Verificado: mobile(390) kebab flex + menu block acima do conteúdo; desktop(1920) kebab none + botão texto "Minhas inscrições" visível.
