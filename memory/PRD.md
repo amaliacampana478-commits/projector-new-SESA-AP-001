@@ -179,3 +179,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 ## Update 2026-06 (fork) — pagamento-pix.html: mesmo menu kebab mobile
 - Aplicado em pagamento-pix.html o mesmo script do inscricao-realizada: desktop renomeia #logout -> "Minhas inscrições"; mobile (<=991) esconde #logout e mostra kebab (3 pontinhos) no .navbar-end; dropdown no light DOM (fixed, z-index alto) com link /minhas-inscricoes.html.
 - Verificado: mobile(390) kebab flex + menu block; desktop(1920) kebab none + botão texto.
+
+## Update 2026-06 (fork) — inscricao-realizada & pagamento-pix: resumo em fluxo inline (mobile)
+- Pedido: rótulo (negrito PRETO) + valor na MESMA linha; valor longo deve quebrar usando a largura toda (continuação inicia à esquerda, sob o rótulo), sem ficar preso em coluna estreita.
+- inscricao-realizada (.blocoPadrao table) e pagamento-pix (#pix-content > table): no @media mobile, table/tbody=block, tr=block (borda inferior), td=display:inline (fluxo de texto), td do rótulo (first-child / [style*=font-weight:bold][white-space:nowrap]) = inline, font-weight 700, color #111, margin-right 6px.
+- Rótulo cinza (var(--aocp-muted)) da realizada vencido com especificidade extra: html body .blocoPadrao .dados table td:first-child{color:#111!important}. Verificado: cor rgb(17,17,17); vaga longa quebra em largura total. PIX label cor #111 confirmada.
