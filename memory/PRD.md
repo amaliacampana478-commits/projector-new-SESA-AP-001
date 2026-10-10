@@ -121,3 +121,9 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - DB settings já tinha pix_nome 'Concurso SESA AP' / pix_cidade 'Amapá'. Não há campo UI para telegram_titulo (vem do default backend).
 - Verificado via screenshot: login, dashboard e Configurações mostram "Concurso SESA AP"; nenhum resíduo SAEB/Bahia/Salvador/SEDUC. Backend sem erros.
 - Credenciais admin salvas em /app/memory/test_credentials.md (donas / Seinao10@@).
+
+## Update 2026-06 (fork) — Neutralizar links externos do header (inicio.html)
+- Todos os <a> do <header><nav> do inicio.html apontavam para institutoaocp.org.br / ciaocp.com.br / social.* / noticias.* / link.* (Início, Quem Somos, Concursos, Peça seu Certificado, Projetos Sociais, Cursos Livres, Notícias, Contato, Atendimento ao Candidato + logo).
+- Fix: script injetado antes de </body> (neutralizeHeaderLinks) reescreve TODOS os anchors dentro de 'header nav' para href='inicio.html' e remove target/rel/download. Cobre menu desktop e menu mobile (drawer) de uma vez.
+- Resultado: clicar qualquer título recarrega e volta para a página inicial; nenhum link sai do site.
+- Verificado via screenshot_tool: 31 anchors, 0 externos em desktop(1920) e mobile(390).
