@@ -745,4 +745,19 @@ CEP: 01311-000</p></div>
 </div>
 </div></div>
 </footer>
-</div></body></html>
+</div><script>
+(function(){
+  function fit(){
+    var on=window.matchMedia('(max-width:640px)').matches;
+    var m=document.querySelector('main');
+    var els=[].slice.call(document.querySelectorAll('main .container, main .container_inner, main .Conteudo'));
+    if(m)els.unshift(m);
+    els.forEach(function(e){
+      if(on){e.style.setProperty('padding-left','6px','important');e.style.setProperty('padding-right','6px','important');}
+      else{e.style.removeProperty('padding-left');e.style.removeProperty('padding-right');}
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fit);}else{fit();}
+  window.addEventListener('resize',fit);
+})();
+</script></body></html>

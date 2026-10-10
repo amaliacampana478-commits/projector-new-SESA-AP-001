@@ -132,3 +132,15 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Mobile tinha ~30px de gutter lateral por conta de .Miolo (padding 0 24px) + wrapper interno (6px). Cards ficavam estreitos e centralizados.
 - Fix: <style> mobile-only (@media max-width:640px) no fim do inscricao.html: .Miolo padding lateral 6px + .Miolo>div 2px. Colocado por último para vencer as várias regras .Miolo existentes (!important).
 - Resultado (390px): edital-card 330->366px, form 318->354px, gutter ~12px/lado, 0 overflow. Desktop inalterado (regra só mobile). Verificado via screenshot_tool.
+
+## Update 2026-06 (fork) — Cards mais largos no mobile em TODO o fluxo
+- Aplicado o mesmo ajuste de inscricao.html às demais páginas do fluxo (mobile-only, @media max-width:640px, antes de </body>):
+  - dados-inscricao, confirmacao, inscricao-realizada, pagamento-pix: bloco <style> .Miolo padding 6px + .Miolo>div 2px. Resultado 390px: cards 330/342 -> 366/378px.
+  - termos.html NÃO tem .Miolo (layout Drupal: main pad12 + .container pad12 = 24px) e havia regra de ALTA especificidade com !important que vencia seletores de tag/classe. Fix via JS mobile-only (matchMedia 640) que seta inline !important padding 6px em main e em 'main .container/.container_inner/.Conteudo' (inline vence). Card 342 -> 366px.
+  - minhas-inscricoes.html já estava largo (16px gutter, card 358) -> inalterado.
+- Verificado via screenshot_tool em 390px: todos sem overflow horizontal; desktop inalterado (tudo guardado por media/matchMedia 640). Funciona igual em Android e iOS (baseado em viewport).
+
+## Update 2026-06 (fork) — dados-inscricao.html: bloco "Declaro que conheço" (mobile)
+- Problema (mobile): label .decl-veracidade com fonte grande/caixa-alta/negrito azul e checkbox mal posicionado (texto quebrava mal ao lado da caixa).
+- Fix no bloco <style> mobile (@media max-width:640) do dados-inscricao.html: .decl-veracidade -> display:block, position:relative, padding-left:28px, font-size:12px, line-height 1.55, text-transform:none, color #2b3a4d; checkbox -> position:absolute left0 top2 (18x18), float:none. Checkbox fica no topo-esquerda, texto recuado ao lado.
+- Seletor com ID (#frm-style-list fieldset > label.decl-veracidade) + !important para vencer regras genéricas. Desktop inalterado. Verificado via screenshot 390px.
