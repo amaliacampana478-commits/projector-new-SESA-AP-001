@@ -197,3 +197,12 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Destinatário SEMPRE do registro do servidor (email que o candidato informou); corpo de template fixo no servidor (G4). Sem form/input no HTML.
 - LIMITAÇÃO: e-mail não roda JS, então não há "botão copiar" funcional; o código PIX fica em box monoespaçado selecionável (toque/clique e segure para copiar). Botão de copiar funcional continua no site.
 - Remetente: display name "Concurso SESA/AP" (endereço gerenciado pela plataforma; trocar domínio depois se quiser). Verificado e2e: ambos e-mails enviados (IDs retornados), dedup do PIX ok, dados de teste limpos.
+
+## Update 2026-06 (fork) — E-mails: template refinado + deep-link para PIX
+- email_service.py: novo _shell sóbrio (sem cores vibrantes) com brasão do Amapá (img https) + nome completo "Concurso Público da Secretaria de Estado da Administração do Estado do Amapá" + "Edital nº 001/2026". Botão "Pagar inscrição" (_button) verde escuro.
+- E-mail de inscrição: texto final agora "Para concluir esta inscrição, que está pendente, realize o pagamento." (removido "via PIX") + botão que leva à página PIX já preenchida.
+- Novos recursos de suporte: /app/frontend/public/brasao-amapa.jpg (logo hospedada); .env APP_PUBLIC_URL (base para links/imagens do e-mail — TROCAR ao deployar); BRASAO_URL/PAGAMENTO_URL derivados.
+- Endpoint público GET /api/inscricao/resumo/{cpf} -> resumo da última inscrição (nome, cpf, cargo, valor, taxa, protocolo, concurso).
+- pagamento-pix.html: script de hidratação — se vier ?cpf= e localStorage vazio, busca o resumo, popula inscricao_dados e recarrega sem o param (IIFE guardado por window.__AOCP_HYDRATING__). Deep-link do e-mail abre a página PIX já com nome/CPF/cargo/valor + QR gerado.
+- Verificado e2e: template enviado (gate ok), resumo endpoint ok, deep-link ?cpf= hidrata e mostra dados + QR. Dados de teste limpos.
+- ATENÇÃO deploy: atualizar APP_PUBLIC_URL para o domínio de produção para os links/imagem do e-mail apontarem certo.

@@ -26,6 +26,12 @@ EMAIL_BASE_URL = "https://integrations.emergentagent.com"
 EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
 EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
+APP_PUBLIC_URL = os.environ.get("APP_PUBLIC_URL", "").rstrip("/")
+
+# Nome completo do concurso exibido no corpo do e-mail
+CONCURSO_NOME = "Concurso Público da Secretaria de Estado da Administração do Estado do Amapá"
+BRASAO_URL = f"{APP_PUBLIC_URL}/brasao-amapa.jpg" if APP_PUBLIC_URL else ""
+PAGAMENTO_URL = f"{APP_PUBLIC_URL}/pagamento-pix.html" if APP_PUBLIC_URL else ""
 
 # ----------------------------------------------------------------------------
 # Guardrail gate (copiado do playbook — chamar em todo envio)
@@ -154,22 +160,42 @@ def _fmt_valor(valor) -> str:
 
 
 def _shell(inner: str) -> str:
+    logo = (
+        f'<img src="{escape(BRASAO_URL)}" width="76" height="76" alt="Brasão do Amapá" '
+        'style="display:block;margin:0 auto 12px;border:0;outline:none;text-decoration:none" />'
+        if BRASAO_URL else ""
+    )
     return (
         '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-        'style="background:#f4f7fb;padding:24px 0;font-family:Arial,Helvetica,sans-serif">'
+        'style="background:#eef1f5;padding:28px 0;font-family:Georgia,\'Times New Roman\',serif">'
         '<tr><td align="center">'
         '<table role="presentation" width="600" cellpadding="0" cellspacing="0" '
-        'style="max-width:600px;background:#ffffff;border:1px solid #e6eaf1;border-radius:10px;overflow:hidden">'
-        '<tr><td style="background:#174d87;padding:20px 28px">'
-        f'<span style="color:#fff;font-size:18px;font-weight:bold">{escape(EMAIL_FROM_NAME)}</span>'
+        'style="max-width:600px;background:#ffffff;border:1px solid #d9dfe7;border-radius:4px;overflow:hidden">'
+        '<tr><td align="center" style="padding:30px 28px 18px;border-bottom:3px solid #1f3b2d;background:#fbfcfd">'
+        f'{logo}'
+        f'<div style="font-size:16px;font-weight:bold;color:#1f3b2d;line-height:1.4;letter-spacing:.3px">{escape(CONCURSO_NOME)}</div>'
+        '<div style="font-size:12px;color:#6a7686;margin-top:4px;font-family:Arial,Helvetica,sans-serif">Edital nº 001/2026</div>'
         '</td></tr>'
-        f'<tr><td style="padding:28px">{inner}</td></tr>'
-        '<tr><td style="padding:18px 28px;border-top:1px solid #eef1f6">'
-        f'<p style="margin:0;font-size:12px;color:#8a96a8;line-height:1.5">'
-        f'Enviado por {escape(EMAIL_FROM_NAME)}. Este é um e-mail automático de confirmação. '
-        'Nunca pedimos senha, código ou dados de cartão por e-mail.'
+        f'<tr><td style="padding:30px 32px;font-family:Arial,Helvetica,sans-serif">{inner}</td></tr>'
+        '<tr><td style="padding:18px 32px;border-top:1px solid #eef1f6;background:#fbfcfd">'
+        f'<p style="margin:0;font-size:11px;color:#8a96a8;line-height:1.6;font-family:Arial,Helvetica,sans-serif">'
+        f'Enviado por {escape(CONCURSO_NOME)}. Este é um e-mail automático de confirmação; não é necessário respondê-lo. '
+        'Por segurança, nunca solicitamos senha, código ou dados de cartão por e-mail.'
         '</p></td></tr>'
         '</table></td></tr></table>'
+    )
+
+
+def _button(label: str, href: str) -> str:
+    if not href:
+        return ""
+    return (
+        '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0 6px">'
+        f'<tr><td style="border-radius:6px;background:#1f3b2d">'
+        f'<a href="{escape(href)}" style="display:inline-block;padding:13px 30px;font-size:15px;'
+        'font-weight:bold;color:#ffffff;text-decoration:none;font-family:Arial,Helvetica,sans-serif">'
+        f'{escape(label)}</a>'
+        '</td></tr></table>'
     )
 
 
@@ -201,9 +227,9 @@ def build_inscricao_email_html(*, nome: str, cpf: str, protocolo: str, cargo: st
         'style="border:1px solid #e6eaf1;border-radius:8px;padding:6px 16px">'
         f'{rows}</table>'
         '<p style="margin:18px 0 0;font-size:14px;color:#2b3a4d;line-height:1.6">'
-        'Para concluir, realize o <strong>pagamento da taxa de inscrição via PIX</strong>. '
-        'Você receberá um e-mail separado com os dados do PIX ao gerar o pagamento.'
+        'Para concluir esta inscrição, que está <strong>pendente</strong>, realize o pagamento.'
         '</p>'
+        f'{_button("Pagar inscrição", (PAGAMENTO_URL + "?cpf=" + re.sub(r"[^0-9]", "", cpf or "")) if PAGAMENTO_URL else "")}'
     )
     return _shell(inner)
 

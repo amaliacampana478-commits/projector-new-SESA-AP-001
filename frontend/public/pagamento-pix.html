@@ -838,6 +838,37 @@ h2.tituloPagina span { border-bottom:0 !important; text-indent:0 !important; pad
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script>
 (function(){
+  try{
+    var params = new URLSearchParams(window.location.search);
+    var cpf = (params.get('cpf')||'').replace(/\D/g,'');
+    var has = false;
+    try{ var e = JSON.parse(localStorage.getItem('inscricao_dados')||'{}'); has = !!(e && (e.CPF||e.NOME)); }catch(_){}
+    if(cpf && !has){
+      window.__AOCP_HYDRATING__ = true;
+      fetch(window.location.origin + '/api/inscricao/resumo/' + cpf)
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(j){
+          if(j){
+            var valor = parseFloat(j.valor)||0;
+            var dados = {
+              NOME: j.nome||'', CPF: j.cpf||cpf,
+              __vaga_label: j.cargo_titulo||'', __cargo_titulo: j.cargo_titulo||'',
+              __cargo_codigo: j.cargo_codigo||'', VAGA: j.cargo_codigo||'',
+              __valor: valor, __taxa: j.taxa || ('R$ ' + valor.toFixed(2).replace('.',',')),
+              __protocolo: j.protocolo||'', __concurso: j.concurso||''
+            };
+            try{ localStorage.setItem('inscricao_dados', JSON.stringify(dados)); }catch(_){}
+          }
+          window.location.replace('pagamento-pix.html');
+        })
+        .catch(function(){ window.location.replace('pagamento-pix.html'); });
+    }
+  }catch(_){}
+})();
+</script>
+<script>
+(function(){
+  if(window.__AOCP_HYDRATING__){ return; }
   var d = {};
   try{ d = JSON.parse(localStorage.getItem('inscricao_dados') || '{}'); }catch(e){ d = {}; }
 

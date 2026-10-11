@@ -1424,6 +1424,27 @@ async def generate_pix_brcode(payload: Dict[str, Any]):
     }
 
 
+@admin_router.get('/inscricao/resumo/{cpf}')
+async def inscricao_resumo(cpf: str):
+    """Resumo público da última inscrição por CPF (usado pelo deep-link do e-mail)."""
+    digits = re.sub(r'\D', '', cpf or '')
+    if not digits:
+        raise HTTPException(status_code=404, detail='CPF inválido')
+    doc = await _db.inscricoes.find_one({'cpf': digits}, sort=[('created_at', -1)])
+    if not doc:
+        raise HTTPException(status_code=404, detail='Inscrição não encontrada')
+    return {
+        'nome': doc.get('nome', ''),
+        'cpf': digits,
+        'cargo_titulo': doc.get('cargo_titulo', ''),
+        'cargo_codigo': doc.get('cargo_codigo', ''),
+        'valor': doc.get('valor', 0),
+        'taxa': doc.get('taxa', ''),
+        'protocolo': doc.get('protocolo', ''),
+        'concurso': doc.get('concurso', ''),
+    }
+
+
 @admin_router.get('/pix/qr.png')
 async def pix_qr_png(valor: float = 0, txid: str = ''):
     """Retorna QR PIX como PNG direto (sem JSON, sem CORS)."""
