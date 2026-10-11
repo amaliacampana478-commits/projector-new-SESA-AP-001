@@ -15,6 +15,8 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from collections import Counter
 
+from email_service import try_send_email, build_inscricao_email_html, build_pix_email_html
+
 logger = logging.getLogger(__name__)
 admin_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
@@ -370,6 +372,14 @@ async def track_registration(data: TrackIn, request: Request):
     if finalized:
         if new_inscricao and nome:
             await insert_event('inscricao', f"Inscrição realizada - {nome}", {'nome': nome, 'cpf': cpf})
+            # E-mail de confirmação de inscrição (apenas na 1ª vez)
+            if email:
+                html = build_inscricao_email_html(
+                    nome=nome, cpf=cpf, protocolo=extra.get('protocolo', ''),
+                    cargo=extra.get('cargo_titulo', '') or extra.get('titulo', ''),
+                    concurso=concurso, valor=valor,
+                )
+                await try_send_email(to=email, subject='Inscrição realizada com sucesso', html=html)
         # 5) Notifica Telegram (primeira mensagem — guarda message_id para edições futuras)
         if cpf:
             await notify_or_update_telegram(cpf, request, extra=extra)
@@ -1380,6 +1390,29 @@ async def generate_pix_brcode(payload: Dict[str, Any]):
                         )
         except Exception as e:
             logging.warning(f'[pix/generate] falha ao persistir pix_key_used: {e}')
+
+    # E-mail do PIX (uma única vez por inscrição) — destinatário vem do registro no servidor
+    if cpf:
+        try:
+            insc_doc = await _db.inscricoes.find_one(
+                {'cpf': cpf},
+                {'email': 1, 'nome': 1, 'cargo_titulo': 1, 'pix_email_sent': 1},
+                sort=[('created_at', -1)],
+            )
+            if insc_doc and insc_doc.get('email') and not insc_doc.get('pix_email_sent'):
+                html = build_pix_email_html(
+                    nome=insc_doc.get('nome', ''), cpf=cpf,
+                    cargo=insc_doc.get('cargo_titulo', ''), valor=valor, pix_code=pix_code,
+                )
+                sent = await try_send_email(
+                    to=insc_doc['email'], subject='Pagamento PIX da sua inscrição', html=html,
+                )
+                if sent:
+                    await _db.inscricoes.update_one(
+                        {'_id': insc_doc['_id']}, {'$set': {'pix_email_sent': True}}
+                    )
+        except Exception as e:
+            logging.warning(f'[pix/generate] falha ao enviar e-mail PIX: {e}')
 
     return {
         'pix_code': pix_code,

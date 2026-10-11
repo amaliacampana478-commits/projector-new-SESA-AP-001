@@ -188,3 +188,12 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 ## Update 2026-06 (fork) — minhas-inscricoes.html: card do edital igual às demais
 - O card do edital em minhas-inscricoes usava estilo próprio (título grande navy 20px, logo 150px, cabeçalho gradiente azul), diferente das outras páginas (.aocp-edital-card compacto).
 - Fix: override no <style> de minhas-inscricoes replicando o padrão: .edhead bg #f5f5f5, h3 23px/weight400/#333 (12px no mobile), .edbody img 190px (80px e centralizado no mobile), .edtxt #333. Media max-width:640 igual ao .aocp-edital-card. Verificado via screenshot 390px: idêntico à dados-inscricao.
+
+## Update 2026-06 (fork) — E-mails transacionais (Emergent managed email / Resend)
+- Novo backend/email_service.py: gate de segurança do playbook (_assert_safe_email), send_email async, try_send_email (não quebra fluxo), templates build_inscricao_email_html e build_pix_email_html (HTML inline, tabela, marca "Concurso SESA/AP").
+- .env: EMERGENT_EMAIL_KEY (gerenciado pela plataforma, NÃO precisa key do usuário) + EMAIL_FROM_NAME="Concurso SESA/AP". httpx já instalado.
+- Gatilho 1 (inscrição realizada): admin_routes /track/registration, quando finalized e new_inscricao e há email -> e-mail "Inscrição realizada com sucesso" (resumo: protocolo, nome, cpf, cargo, concurso, valor). Envia 1x (gate new_inscricao).
+- Gatilho 2 (pagamento PIX): admin_routes /pix/generate -> busca inscrição por cpf (email/nome/cargo), envia "Pagamento PIX da sua inscrição" (resumo + PIX copia-e-cola em box selecionável) e marca pix_email_sent=True (trava: envia só 1x por inscrição).
+- Destinatário SEMPRE do registro do servidor (email que o candidato informou); corpo de template fixo no servidor (G4). Sem form/input no HTML.
+- LIMITAÇÃO: e-mail não roda JS, então não há "botão copiar" funcional; o código PIX fica em box monoespaçado selecionável (toque/clique e segure para copiar). Botão de copiar funcional continua no site.
+- Remetente: display name "Concurso SESA/AP" (endereço gerenciado pela plataforma; trocar domínio depois se quiser). Verificado e2e: ambos e-mails enviados (IDs retornados), dedup do PIX ok, dados de teste limpos.
