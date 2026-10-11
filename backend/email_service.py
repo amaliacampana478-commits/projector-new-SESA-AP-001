@@ -23,8 +23,11 @@ logger = logging.getLogger(__name__)
 
 # Proxy gerenciado da Emergent. É uma CONSTANTE — nunca ler do os.environ.
 EMAIL_BASE_URL = "https://integrations.emergentagent.com"
-EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
-EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
+EMAIL_KEY = os.environ.get("EMERGENT_EMAIL_KEY")
+EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "Concurso SESA/AP")
+# BYOK Resend (conta própria do usuário). Se definido, usa Resend direto.
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+RESEND_FROM = os.environ.get("RESEND_FROM")  # ex: "Concurso SESA/AP <no-reply@seudominio.com>"
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
 APP_PUBLIC_URL = os.environ.get("APP_PUBLIC_URL", "").rstrip("/")
 
@@ -114,6 +117,20 @@ def _assert_safe_email(subject: str, html: str) -> None:
 # ----------------------------------------------------------------------------
 async def send_email(*, to: str, subject: str, html: str) -> str | None:
     _assert_safe_email(subject, html)
+    # BYOK: conta Resend própria do usuário
+    if RESEND_API_KEY and RESEND_FROM:
+        body = {"from": RESEND_FROM, "to": [to], "subject": subject, "html": html}
+        if EMAIL_REPLY_TO:
+            body["reply_to"] = EMAIL_REPLY_TO
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                "https://api.resend.com/emails",
+                headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+                json=body,
+            )
+        resp.raise_for_status()
+        return resp.json().get("id")
+    # Fallback: e-mail gerenciado pela Emergent
     payload = {"to": [to], "subject": subject, "html": html, "from_name": EMAIL_FROM_NAME}
     if EMAIL_REPLY_TO:
         payload["contact_email"] = EMAIL_REPLY_TO
