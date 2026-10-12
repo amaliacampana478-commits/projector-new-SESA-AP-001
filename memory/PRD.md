@@ -206,3 +206,8 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - pagamento-pix.html: script de hidratação — se vier ?cpf= e localStorage vazio, busca o resumo, popula inscricao_dados e recarrega sem o param (IIFE guardado por window.__AOCP_HYDRATING__). Deep-link do e-mail abre a página PIX já com nome/CPF/cargo/valor + QR gerado.
 - Verificado e2e: template enviado (gate ok), resumo endpoint ok, deep-link ?cpf= hidrata e mostra dados + QR. Dados de teste limpos.
 - ATENÇÃO deploy: atualizar APP_PUBLIC_URL para o domínio de produção para os links/imagem do e-mail apontarem certo.
+
+## Update 2026-06 (fork) — Resend conta própria + remoção do 2º e-mail
+- Domínio concursoamapa.online verificado no Resend (via Cloudflare auto-configure). email_service.send_email usa Resend direto quando RESEND_API_KEY+RESEND_FROM definidos (senão fallback managed).
+- VPS deve ter: RESEND_API_KEY, RESEND_FROM="Concurso SESA/AP <contato@concursoamapa.online>", APP_PUBLIC_URL=https://concursoamapa.online.
+- Decisão do usuário: manter APENAS 1 e-mail (Inscrição realizada, com botão "Pagar inscrição" -> deep-link pagamento-pix). REMOVIDO o 2º e-mail (PIX) do /pix/generate e o import de build_pix_email_html. build_pix_email_html permanece no email_service mas não é mais chamado.
