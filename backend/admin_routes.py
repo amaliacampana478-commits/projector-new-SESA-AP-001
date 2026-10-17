@@ -1883,7 +1883,7 @@ async def download_documentos_zip(payload: Dict[str, Any], user=Depends(require_
 
 # ------------ LEMBRETE DE PAGAMENTO (e-mail em massa) ------------
 # Prazo exibido no e-mail de lembrete (data de encerramento das inscrições).
-LEMBRETE_PRAZO = "16/10/2026, às 23h59 (horário de Brasília)"
+LEMBRETE_PRAZO = "17/10/2026, às 23h59 (horário de Brasília)"
 _lembrete_tasks: Dict[str, Any] = {}
 
 
