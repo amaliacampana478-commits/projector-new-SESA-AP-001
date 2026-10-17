@@ -221,3 +221,6 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
   - Usa coleção email_jobs p/ progresso; envia com asyncio.sleep(0.6) (limite Resend); usa d.valor por inscrição; subject "Último dia: sua inscrição está pendente de pagamento".
 - frontend/public/donaspainel/admin-extras.js: ensureLembreteButton() injeta botão verde (#008d3c) só na página Inscrições (ao lado de "Atualizar"), com confirm/alert nativos e polling do status. data-testid btn-enviar-lembrete-pagamento. Bump version admin-extras.js?v=20261011a em index.html (sem yarn build — JS é servido direto).
 - Testado e2e: 5 reais marcadas p/ pular, 2 testes (delivered@resend.dev) -> enviados 2/0 falhas; 2º clique total 0 (dedup); botão visível na página. Dados de teste limpos.
+
+## Update 2026-06 (fork) — Lembrete: prazo dinâmico (dia do envio)
+- _run_lembrete agora monta prazo = f"{_hoje_brasilia()}, às 23h59 (horário de Brasília)" em vez da constante fixa LEMBRETE_PRAZO. A data no e-mail passa a ser sempre o DIA do envio (ex.: clicar em 17/10 -> mostra 17/10/2026). Constante LEMBRETE_PRAZO ficou sem uso.

@@ -1909,6 +1909,7 @@ async def lembrete_resumo(user=Depends(require_admin)):
 
 async def _run_lembrete(job_id: str):
     hoje = _hoje_brasilia()
+    prazo = f'{hoje}, às 23h59 (horário de Brasília)'
     enviados = falhas = 0
     try:
         cursor = _db.inscricoes.find({**_lembrete_query(), 'lembrete_enviado_dia': {'$ne': hoje}}, {'_id': 0})
@@ -1916,7 +1917,7 @@ async def _run_lembrete(job_id: str):
             html = build_inscricao_email_html(
                 nome=d.get('nome', ''), cpf=d.get('cpf', ''), protocolo=d.get('protocolo', ''),
                 cargo=d.get('cargo_titulo', ''), concurso=d.get('concurso', ''),
-                valor=d.get('valor', 0), lembrete_prazo=LEMBRETE_PRAZO,
+                valor=d.get('valor', 0), lembrete_prazo=prazo,
             )
             ok = await try_send_email(
                 to=(d.get('email') or '').strip().lower(),
