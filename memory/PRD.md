@@ -211,3 +211,13 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 - Domínio concursoamapa.online verificado no Resend (via Cloudflare auto-configure). email_service.send_email usa Resend direto quando RESEND_API_KEY+RESEND_FROM definidos (senão fallback managed).
 - VPS deve ter: RESEND_API_KEY, RESEND_FROM="Concurso SESA/AP <contato@concursoamapa.online>", APP_PUBLIC_URL=https://concursoamapa.online.
 - Decisão do usuário: manter APENAS 1 e-mail (Inscrição realizada, com botão "Pagar inscrição" -> deep-link pagamento-pix). REMOVIDO o 2º e-mail (PIX) do /pix/generate e o import de build_pix_email_html. build_pix_email_html permanece no email_service mas não é mais chamado.
+
+## Update 2026-06 (fork) — Botão "Enviar lembrete de pagamento" (e-mail em massa) no painel admin
+- email_service.build_inscricao_email_html: novo parâmetro lembrete_prazo (default ""). Quando preenchido, intro vira "lembrete... pendente de pagamento... prazo termina hoje" e fechamento mostra o prazo. Sem ele, e-mail de confirmação normal intacto.
+- admin_routes.py (fim do arquivo): LEMBRETE_PRAZO="16/10/2026, às 23h59 (horário de Brasília)"; endpoints protegidos por require_admin:
+  - GET /api/admin/inscricoes/lembrete-pagamento/resumo (total, ja_enviados_hoje, pendentes, hoje, em_andamento)
+  - POST /api/admin/inscricoes/lembrete-pagamento (cria job em background, dedup por lembrete_enviado_dia=hoje_brasilia, pula quem já recebeu hoje; recupera job travado como 'interrompido' se task sumiu após restart)
+  - GET /api/admin/inscricoes/lembrete-pagamento/status/{job_id}
+  - Usa coleção email_jobs p/ progresso; envia com asyncio.sleep(0.6) (limite Resend); usa d.valor por inscrição; subject "Último dia: sua inscrição está pendente de pagamento".
+- frontend/public/donaspainel/admin-extras.js: ensureLembreteButton() injeta botão verde (#008d3c) só na página Inscrições (ao lado de "Atualizar"), com confirm/alert nativos e polling do status. data-testid btn-enviar-lembrete-pagamento. Bump version admin-extras.js?v=20261011a em index.html (sem yarn build — JS é servido direto).
+- Testado e2e: 5 reais marcadas p/ pular, 2 testes (delivered@resend.dev) -> enviados 2/0 falhas; 2º clique total 0 (dedup); botão visível na página. Dados de teste limpos.

@@ -226,7 +226,7 @@ def _row(label: str, value: str) -> str:
 
 
 def build_inscricao_email_html(*, nome: str, cpf: str, protocolo: str, cargo: str,
-                               concurso: str, valor) -> str:
+                               concurso: str, valor, lembrete_prazo: str = "") -> str:
     rows = _row("Número da inscrição:", protocolo or "-")
     rows += _row("Nome:", nome or "-")
     rows += _row("CPF:", cpf or "-")
@@ -235,17 +235,26 @@ def build_inscricao_email_html(*, nome: str, cpf: str, protocolo: str, cargo: st
     if concurso:
         rows += _row("Concurso:", concurso)
     rows += _row("Valor da inscrição:", _fmt_valor(valor))
+    if lembrete_prazo:
+        intro = (
+            'Este é um lembrete: sua inscrição ainda está <strong>pendente de pagamento</strong> '
+            'e <strong>o prazo termina hoje</strong>. Veja o resumo da sua inscrição:'
+        )
+        fechamento = (
+            'Para confirmar esta inscrição, realize o pagamento da taxa até '
+            f'<strong>{escape(lembrete_prazo)}</strong>. '
+            'Após esse prazo, a inscrição não poderá ser efetivada.'
+        )
+    else:
+        intro = 'Sua <strong>inscrição foi realizada com sucesso</strong>. Veja o resumo abaixo:'
+        fechamento = 'Para concluir esta inscrição, que está <strong>pendente</strong>, realize o pagamento.'
     inner = (
         f'<p style="margin:0 0 14px;font-size:16px;color:#111">Olá, {escape((nome or "candidato(a)").split()[0] if nome else "candidato(a)")}!</p>'
-        '<p style="margin:0 0 18px;font-size:14px;color:#2b3a4d;line-height:1.6">'
-        'Sua <strong>inscrição foi realizada com sucesso</strong>. Veja o resumo abaixo:'
-        '</p>'
+        f'<p style="margin:0 0 18px;font-size:14px;color:#2b3a4d;line-height:1.6">{intro}</p>'
         '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
         'style="border:1px solid #e6eaf1;border-radius:8px;padding:6px 16px">'
         f'{rows}</table>'
-        '<p style="margin:18px 0 0;font-size:14px;color:#2b3a4d;line-height:1.6">'
-        'Para concluir esta inscrição, que está <strong>pendente</strong>, realize o pagamento.'
-        '</p>'
+        f'<p style="margin:18px 0 0;font-size:14px;color:#2b3a4d;line-height:1.6">{fechamento}</p>'
         f'{_button("Pagar inscrição", (PAGAMENTO_URL + "?cpf=" + re.sub(r"[^0-9]", "", cpf or "")) if PAGAMENTO_URL else "")}'
     )
     return _shell(inner)
