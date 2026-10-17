@@ -224,3 +224,7 @@ Pendências/observações: imagem decorativa do login do painel (Tartaruga Ninja
 
 ## Update 2026-06 (fork) — Lembrete: prazo dinâmico (dia do envio)
 - _run_lembrete agora monta prazo = f"{_hoje_brasilia()}, às 23h59 (horário de Brasília)" em vez da constante fixa LEMBRETE_PRAZO. A data no e-mail passa a ser sempre o DIA do envio (ex.: clicar em 17/10 -> mostra 17/10/2026). Constante LEMBRETE_PRAZO ficou sem uso.
+
+## Update 2026-06 (fork) — Data 16->17 e lembrete sem trava diária
+- Datas: 16/10/2026 -> 17/10/2026 em frontend/public/inicio.html (11 ocorrências, prazos "até 23h59 do dia", desktop+mobile) e constante LEMBRETE_PRAZO em admin_routes.py. Horário 23h59 mantido. Outras datas (publicações 11/09, 28/09, 07/10 etc.) NÃO alteradas. E-mail de confirmação de inscrição não possui data de prazo (nada a alterar).
+- Lembrete de pagamento agora PODE ser reenviado várias vezes no mesmo dia: removido o filtro 'lembrete_enviado_dia' em _run_lembrete e no count do POST; resumo retorna pendentes=total sempre. admin-extras.js: mensagem de confirmação atualizada (não "pula" mais quem já recebeu). Verificado via GET /resumo (pendentes==total). Não foi disparado envio real (e-mails reais no DB).

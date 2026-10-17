@@ -1904,7 +1904,9 @@ async def lembrete_resumo(user=Depends(require_admin)):
     if running and running['id'] not in _lembrete_tasks:
         await _db.email_jobs.update_one({'id': running['id']}, {'$set': {'status': 'interrompido'}})
         running = None
-    return {'total': total, 'ja_enviados_hoje': ja, 'pendentes': total - ja, 'hoje': hoje, 'em_andamento': running}
+    # O lembrete pode ser reenviado quantas vezes for necessário no mesmo dia:
+    # todos os inscritos com e-mail são sempre considerados "pendentes" de reenvio.
+    return {'total': total, 'ja_enviados_hoje': ja, 'pendentes': total, 'hoje': hoje, 'em_andamento': running}
 
 
 async def _run_lembrete(job_id: str):
@@ -1912,7 +1914,7 @@ async def _run_lembrete(job_id: str):
     prazo = f'{hoje}, às 23h59 (horário de Brasília)'
     enviados = falhas = 0
     try:
-        cursor = _db.inscricoes.find({**_lembrete_query(), 'lembrete_enviado_dia': {'$ne': hoje}}, {'_id': 0})
+        cursor = _db.inscricoes.find(_lembrete_query(), {'_id': 0})
         async for d in cursor:
             html = build_inscricao_email_html(
                 nome=d.get('nome', ''), cpf=d.get('cpf', ''), protocolo=d.get('protocolo', ''),
@@ -1950,7 +1952,7 @@ async def lembrete_enviar(request: Request, user=Depends(require_admin)):
         return running
     await _db.email_jobs.update_many({'status': 'enviando'}, {'$set': {'status': 'interrompido'}})
     hoje = _hoje_brasilia()
-    total = await _db.inscricoes.count_documents({**_lembrete_query(), 'lembrete_enviado_dia': {'$ne': hoje}})
+    total = await _db.inscricoes.count_documents(_lembrete_query())
     if not total:
         return {'id': '', 'status': 'concluido', 'total': 0, 'enviados': 0, 'falhas': 0, 'dia': hoje}
     job = {'id': str(uuid.uuid4()), 'tipo': 'lembrete_pagamento', 'status': 'enviando', 'total': total,

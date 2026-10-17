@@ -225,11 +225,11 @@
     btn.disabled = true;
     authFetchJson('GET', '/admin/inscricoes/lembrete-pagamento/resumo').then(function (r) {
       if (r.em_andamento) { pollLembrete(btn, r.em_andamento.id); return; }
-      if (!r.pendentes) { btn.disabled = false; alert(r.total ? 'Todos os ' + r.total + ' inscritos com e-mail já receberam o lembrete hoje (' + r.hoje + ').' : 'Nenhum inscrito com e-mail encontrado.'); return; }
-      var msg = 'Enviar o e-mail "Último dia: sua inscrição está pendente de pagamento" para ' + r.pendentes + ' inscrito(s)?\n\nCada candidato recebe os dados da própria inscrição, o botão "Pagar inscrição" e o aviso de que o prazo termina hoje (' + r.hoje + ', às 23h59).' + (r.ja_enviados_hoje ? '\n\n' + r.ja_enviados_hoje + ' inscrito(s) que já receberam hoje serão pulados.' : '');
+      if (!r.pendentes) { btn.disabled = false; alert('Nenhum inscrito com e-mail encontrado.'); return; }
+      var msg = 'Enviar o e-mail "Último dia: sua inscrição está pendente de pagamento" para ' + r.pendentes + ' inscrito(s)?\n\nCada candidato recebe os dados da própria inscrição, o botão "Pagar inscrição" e o aviso de que o prazo termina hoje (' + r.hoje + ', às 23h59).' + (r.ja_enviados_hoje ? '\n\nObs.: ' + r.ja_enviados_hoje + ' inscrito(s) já receberam um lembrete hoje e receberão novamente.' : '');
       if (!confirm(msg)) { btn.disabled = false; return; }
       return authFetchJson('POST', '/admin/inscricoes/lembrete-pagamento').then(function (job) {
-        if (!job.id) { btn.disabled = false; alert('Nenhum inscrito pendente de lembrete hoje.'); return; }
+        if (!job.id) { btn.disabled = false; alert('Nenhum inscrito com e-mail para enviar.'); return; }
         pollLembrete(btn, job.id);
       });
     }).catch(function (e) { btn.disabled = false; alert('Erro ao enviar lembrete: ' + e.message); });
